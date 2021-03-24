@@ -6,15 +6,47 @@
 #define MIN_ELEMENT 1
 #define MAX_ELEMENT 1000000
 int  sum (int count,...) {
-
+    va_list ap;
+    int num_sum = 0;
+    va_start(ap, count); 
+    for (int j = 0; j < count; j++) {
+        num_sum += va_arg(ap, int); 
+    }
+    va_end(ap);
+    
+    return num_sum;
 }
 
 int min(int count,...) {
-
+    va_list ap;
+    int num_min = MAX_ELEMENT;
+    int current;
+    va_start(ap, count); 
+    for (int j = 0; j < count; j++) {
+        current = va_arg(ap, int);
+        if (current < num_min ){
+            num_min = current;
+        }
+      }
+    va_end(ap);
+    
+    return num_min;
 }
 
 int max(int count,...) {
-
+    va_list ap;
+    int num_max = MIN_ELEMENT;
+    int current;
+    va_start(ap, count); 
+    for (int j = 0; j < count; j++) {
+        current = va_arg(ap, int);
+        if (current > num_max ){
+            num_max = current;
+        }
+      }
+    va_end(ap);
+    
+    return num_max;
 }
 
 int test_implementations_by_sending_three_elements() {
