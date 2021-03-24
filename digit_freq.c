@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define NUM_OF_DIG 10
+
 
 
 int main() {
-    int hist[10]={0};
+    int hist[NUM_OF_DIG]={0};
     char c;
     c = getc(stdin);
     while ( c!= EOF){
@@ -12,7 +14,7 @@ int main() {
         }
         c = getc(stdin);
     }
-    for(int i=0; i<10; i++) {
+    for(int i=0; i<NUM_OF_DIG; i++) {
         putc(hist[i]+'0', stdout);
     }
     return 0;
