@@ -8,14 +8,14 @@ int main() {
     int hist[10]={0};
     char c;
     c = getc(stdin);
-    while ( c!= '?'){ \\change this later
+    while ( c!= '?'){ //change this later
         if (c>='0' && c<'9') {
             hist[c-'0']++;
         }
         c = getc(stdin);
     }
     for(int i=0; i<10; i++) {
-        printf("%d", hist[i]); \\change this later
+        printf("%d", hist[i]); //change this later
     }
     return 0;
 }
