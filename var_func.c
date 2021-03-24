@@ -5,6 +5,13 @@
 
 #define MIN_ELEMENT 1
 #define MAX_ELEMENT 1000000
+
+/**
+ * @brief functions finds sum, min and max from list of variables of different sizes
+ * @param current holds current value from VA
+ * @return sum, min value and max value of all variables from list.
+ */
+
 int  sum (int count,...) {
     va_list ap;
     int num_sum = 0;
