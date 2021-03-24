@@ -4,8 +4,8 @@
 
 #define LENGTH 2*n - 1
 /**
-*@ Brief LENGTH is the length of the matrix
-    n is
+*@ Brief LinePrinter prints the value of each place 
+*@ note LENGTH*LENGTH is the size of the matrix
 **/
 
 //function
