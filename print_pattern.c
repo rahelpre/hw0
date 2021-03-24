@@ -3,20 +3,22 @@
 #include <stdlib.h>
 
 #define LENGTH 2*n - 1
+/**
+*@ Brief LENGTH is the length of the matrix
+    n is
+**/
 
-int pro (int n, int i) {
+//function
+void LinePrinter (int n, int i) {
     for (int j=0; j<LENGTH; j++) {
        if (j<i)  {
                 printf("%d", n-j);
-            }
-        else if(j>=i && j<LENGTH-i) {
+            } else if(j>=i && j<LENGTH-i) {
                 printf ("%d", n-i);
-            }
-        else {
+            } else {
                 printf ("%d", n+j-LENGTH+3);
             }
         } 
-    return 0;
 }
 
 int main() 
@@ -28,10 +30,9 @@ int main()
   
     for(int i=0; i<LENGTH; i++) {
         if (i<n){
-            pro (n, i);
-        }
-        else {
-            pro (n, LENGTH-i-1);
+            LinePrinter (n, i);
+        } else {
+            LinePrinter (n, LENGTH-i-1);
         }
         printf("\n");
     }
