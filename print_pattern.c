@@ -10,5 +10,7 @@ int main()
     int n;
     scanf("%d", &n);
     // Complete the code to print the pattern.
+    for(int i=0; i<n; i++)
+        
     return 0;
 }
