@@ -1,4 +1,3 @@
-// 123456789
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,11 +11,14 @@
 void LinePrinter (int n, int i) {
     for (int j=0; j<LENGTH; j++) {
        if (j<i)  {
-                printf("%d", n-j);
+                printf("%d ", n-j);
             } else if(j>=i && j<LENGTH-i) {
-                printf ("%d", n-i);
+                printf ("%d ", n-i);
             } else {
                 printf ("%d", n+j-LENGTH+3);
+                if (j!=LENGTH-1){
+                    printf(" ");
+                }
             }
         } 
 }
