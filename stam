@@ -5,21 +5,18 @@
 #include "linked-list.h"
 #define FAIL 1
 
+
 int main(int argc, char *argv[]) {
-	
+
   struct grades {
-	  struct student *head;
-	  struct student *tail;
-	  element_clone_t clone;
-	  element_destroy_t destroy;
+	  struct list *list;
   };
-	
 	struct student {
 		struct student *next;
 		struct student *prev;
 		char* name;
 		int id;
-		list *course_list;
+		struct list *course_list;
 	};
 
 	struct course {
@@ -28,70 +25,95 @@ int main(int argc, char *argv[]) {
 		char* course_name;
 		int grade;
 	};
-	
-	struct grades* grades_init(){
-		struct grades *student_list;
-		student_list = list_init();
-		return student_list;
-	}
-	
-	void grades_destroy(struct grades *grades){
-		list_destroy(grades);
-	}
-	
-	int grades_add_student(struct grades *grades, const char *name, int id){
-		if (grades==NULL || find_student(grades, id)==NULL)
-			return FAIL;
-		struct student *student;
-		student->name=(char*)malloc(strlen(name)*sizeof(char));
-		strcpy(student->name, name);
-		student->id=id;
-		list_push_front(grades, student)
-		student->course_list = list_init();
-		return 0;
-	}
-	
-	int grades_add_grade(struct grades *grades,
-	                     const char *name,
-	                     int id,
-	                     int grade){
-		
-	}
-	
-	float grades_calc_avg(struct grades *grades, int id, char **out){
-		
-	}
-	
-	int grades_print_student(struct grades *grades, int id){
-		struct iterator* student_i =find_student (grades,id);
-		if(student_i==NULL){
-			return 1;
-		}
-		printf("%s %d:", student_i->name, student_i->id );
-		struct iterator* student_grades =list_begin(student_i);
-		if(student_grades==NULL){
-					return 1;
-				}
-		while(student_grades){
-		printf("%s %d,", student_grades->course_name, student_grades->grade);
 
-		}
-		return 0;
-	}
-	
-	int grades_print_all(struct grades *grades){
-		
-	}
-	
-	struct iterator* find_student (struct grades *grades, int id){
-		struct iterator i=grades->head;
-		while (i!=NULL && i!=id){
-			struct iterator* list_next(i);
+	struct iterator* find_id (struct grades *grades, int id_num){
+		struct iterator* i=list_begin(grades->list);
+		while (i!=NULL && (list_get(i)->id)!=id_num){
+			i = list_next(i);
 		}
 		if (i==NULL){
 			return NULL;
 		}
 		return i;
 	}
+
+	struct iterator* find_course (struct grades *grades, char *course){
+			struct iterator* i=list_begin(grades->list);
+			while (i!=NULL && !strcmp(list_get(i)->id), course)){
+				i = list_next(i);
+			}
+			if (i==NULL){
+				return NULL;
+			}
+			return i;
+		}
+
+	struct grades* grades_init(){
+		struct grades *student_list;
+		student_list->list = list_init(clone, destroy);
+		return student_list;
+	}
+
+	void grades_destroy(struct grades *grades){
+		list_destroy(grades);
+	}
+
+	int grades_add_student(struct grades *grades, const char *name, int id){
+		if (grades->list==NULL ||
+				find(grades->list, "id", id)(grades->list, id)!=NULL)
+			return FAIL;
+		struct student *student;
+		student->name=(char*)malloc(strlen(name)*sizeof(char));
+		strcpy(student->name, name);
+		student->id=id;
+		list_push_front(grades->list, student);
+		student->course_list = list_init();
+		return 0;
+	}
+
+	int grades_add_grade(struct grades *grades,
+	                     const char *name,
+	                     int id,
+	                     int grade){
+		struct iterator i=find(grades, "id", id);
+		if (grades==NULL || i==NULL || grade<0 || grade>100 ||
+				find(grades->list, "course_name", name)!=NULL){
+			return FAIL;
+		}
+		struct course course;
+		course->course_name=name;
+		course->grade=grade;
+		list_push_front(list_get(i)->course_list, course);
+		return 0;
+	}
+
+	float grades_calc_avg(struct grades *grades, int id, char **out){
+		int sum=0;
+		struct iterator i=find_student(grades->list, id);
+		struct iterator j=list_begin(list_get(i)->course_list);
+		while(j!=NULL){
+			sum+=list_get(j)->grade;
+		}
+		return (float)sum/list_size(list_get(i)->course_list);
+	}
+
+	int grades_print_student(struct grades *grades, int id){
+		struct iterator* student_i =find_student (grades->list,id);
+		if(student_i==NULL){
+			return 1;
+		}
+		printf("%s %d:", student_i->name, student_i->id);
+		struct iterator* student_info =list_begin(student_i);
+		while(student_info){
+			printf("%s %d,", student_info->course_name,student_info->grade);
+		}
+		return 0;
+	}
+
+	int grades_print_all(struct grades *grades){
+
+	}
+
+
     return 0;
 }
