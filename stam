@@ -63,7 +63,20 @@ int main(int argc, char *argv[]) {
 	}
 	
 	int grades_print_student(struct grades *grades, int id){
-		
+		struct iterator* student_i =find_student (grades,id);
+		if(student_i==NULL){
+			return 1;
+		}
+		printf("%s %d:", student_i->name, student_i->id );
+		struct iterator* student_grades =list_begin(student_i);
+		if(student_grades==NULL){
+					return 1;
+				}
+		while(student_grades){
+		printf("%s %d,", student_grades->course_name, student_grades->grade);
+
+		}
+		return 0;
 	}
 	
 	int grades_print_all(struct grades *grades){
