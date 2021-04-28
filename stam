@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
 	struct iterator* find_id (struct grades *grades, int id_num){
 		struct iterator* i=list_begin(grades->list);
-		while (i!=NULL && (list_get(i)->id)!=id_num){
+		while (i!=NULL && ((struct student*)(list_get(i)))->id!=id_num){
 			i = list_next(i);
 		}
 		if (i==NULL){
@@ -38,7 +38,8 @@ int main(int argc, char *argv[]) {
 
 	struct iterator* find_course (struct grades *grades, char *course){
 			struct iterator* i=list_begin(grades->list);
-			while (i!=NULL && !strcmp(list_get(i)->id, course)){
+			while (i!=NULL &&
+				!strcmp(((struct course*)(list_get(i)))->course_name, course)){
 				i = list_next(i);
 			}
 			if (i==NULL){
