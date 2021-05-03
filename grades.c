@@ -47,8 +47,6 @@ void student_printer(struct iterator *student_i){
 	if(student_info != NULL){
 		printf(" %s %d", (((struct course*)student_info)->course_name),
 						(((struct course*)student_info)->grade));
-	//	printf(" %s %d", (((struct course*)student_info)->course_name),
-		//				(((struct course*)student_info)->grade));
 		while((student_info=list_next(student_info))!=NULL){
 			printf(", %s %d", (((struct course*)student_info)->course_name),
 				(((struct course*)student_info)->grade));
@@ -160,6 +158,7 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 	}
 	while(j!=NULL){
 		sum+=((struct course*)list_get(j))->grade;
+		j=list_next(j);
 	}
 	return (float)sum/
 			list_size(((struct student*)(list_get(i)))->course_list);
