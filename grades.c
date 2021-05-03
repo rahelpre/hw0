@@ -39,15 +39,18 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	 * @param student_i is an iterator to the requested student
 	 */
 	void student_printer(struct grades *grades, struct iterator *student_i){
-		printf("%s %d:", ((struct student*)list_get(student_i))->name,
-				((struct student*)list_get(student_i))->id);
+		printf("here1");
+		printf("%s %d:", (((struct student*)list_get(student_i))->name),
+				(((struct student*)list_get(student_i))->id));
 		struct iterator* student_info =
 				list_begin(((struct student*)list_get(student_i))->course_list);
-		printf("%s %d,", ((struct course*)student_info)->course_name,
-							((struct course*)student_info)->grade);
-		while(list_next(student_info)!=NULL){
-			printf("%s %d,", ((struct course*)student_info)->course_name,
-					((struct course*)student_info)->grade);
+		if(student_info != NULL){
+			printf("%s %d,", (((struct course*)student_info)->course_name),
+							(((struct course*)student_info)->grade));
+			while(list_next(student_info)!=NULL){
+				printf("%s %d,", (((struct course*)student_info)->course_name),
+					(((struct course*)student_info)->grade));
+			}
 		}
 	}
 	/*
@@ -57,8 +60,8 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	 * @returns an iterator to the student in the system
 	 */
 	struct iterator* find_id (struct grades *grades, int id_num){
-		struct iterator* i=list_begin(grades->list);
-		while (i!=NULL && ((struct student*)(list_get(i)))->id!=id_num){
+		struct iterator *i=list_begin(grades->list);
+		while (i!=NULL && (((struct student*)(list_get(i)))->id)!=id_num){
 			i = list_next(i);
 		}
 		if (i==NULL){
@@ -87,6 +90,9 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	struct grades* grades_init(){
 		struct grades *student_list=
 				(struct grades*)malloc(sizeof(struct grades*));
+		if(!student_list){
+			return NULL;
+		}
 		student_list->list = list_init(clone_student, destroy_student);
 		return student_list;
 	}
@@ -102,7 +108,13 @@ struct iterator* find_id (struct grades *grades, int id_num);
 		}
 		struct student *student=
 				(struct student*)malloc(sizeof(struct student*));
-		student->name=(char*)malloc(strlen(name)*sizeof(char));
+		if(!student){
+			return FAIL;
+		}
+		student->name=(char*)malloc((strlen(name)+1)*sizeof(char));
+		if(!name){
+			return FAIL;
+		}
 		strcpy(student->name, name);
 		student->id=id;
 		student->course_list = list_init(clone_course, destroy_course);
@@ -120,6 +132,13 @@ struct iterator* find_id (struct grades *grades, int id_num);
 			return FAIL;
 		}
 		struct course *course=(struct course*)malloc(sizeof(struct course*));
+		if(!course){
+			return FAIL;
+		}
+		course->course_name=(char*)malloc((strlen(name)+1)*sizeof(char));
+		if(!course->course_name){
+			return FAIL;
+		}
 		strcpy(course->course_name,name);
 		course->grade=grade;
 		list_push_back(((struct student*)list_get(i))->course_list, course);
@@ -142,10 +161,12 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	}
 
 	int grades_print_student(struct grades *grades, int id){
+		printf("here0");
 		struct iterator* student_i =find_id (grades,id);
 		if(student_i==NULL){
 			return FAIL;
 		}
+		printf("here0");
 		student_printer(grades, student_i);
 		return 0;
 	}
@@ -173,6 +194,9 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	int clone_student (void *elem, void **output){
 		struct student *student=
 				(struct student*)malloc(sizeof(struct student*));
+		if(!student){
+			return FAIL;
+		}
 		*output=student;
 		((struct student*)*output)->prev=((struct student*)elem)->prev;
 		((struct student*)*output)->next=((struct student*)elem)->next;
@@ -184,6 +208,9 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	}
 	int clone_course (void *elem, void **output){
 		struct course *course=(struct course*)malloc(sizeof(struct course*));
+		if(!course){
+			return FAIL;
+		}
 		*output=course;
 		((struct course*)*output)->next=((struct course*)elem)->next;
 		((struct course*)*output)->prev=((struct course*)elem)->prev;
