@@ -39,24 +39,24 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	 * @param student_i is an iterator to the requested student
 	 */
 	void student_printer(struct grades *grades, struct iterator *student_i){
-		printf("here1");
 		printf("%s %d:", (((struct student*)list_get(student_i))->name),
 				(((struct student*)list_get(student_i))->id));
 		struct iterator* student_info =
 				list_begin(((struct student*)list_get(student_i))->course_list);
 		if(student_info != NULL){
-			printf("%s %d,", (((struct course*)student_info)->course_name),
+			printf(" %s %d", (((struct course*)student_info)->course_name),
 							(((struct course*)student_info)->grade));
 			while(list_next(student_info)!=NULL){
-				printf("%s %d,", (((struct course*)student_info)->course_name),
+				printf(", %s %d", (((struct course*)student_info)->course_name),
 					(((struct course*)student_info)->grade));
 			}
 		}
+		printf("\n");
 	}
 	/*
 	 * @brief Finds a student in the system according to his id
 	 * @param grades is the system
-	 * @param id_num is the id of the student we're looking for
+	 * @param id_num is the id of the studefrent we're looking for
 	 * @returns an iterator to the student in the system
 	 */
 	struct iterator* find_id (struct grades *grades, int id_num){
@@ -161,12 +161,10 @@ struct iterator* find_id (struct grades *grades, int id_num);
 	}
 
 	int grades_print_student(struct grades *grades, int id){
-		printf("here0");
 		struct iterator* student_i =find_id (grades,id);
 		if(student_i==NULL){
 			return FAIL;
 		}
-		printf("here0");
 		student_printer(grades, student_i);
 		return 0;
 	}
