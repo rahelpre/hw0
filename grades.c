@@ -9,7 +9,11 @@ void destroy_course (void *elem);
 int clone_student (void *elem, void **output);
 int clone_course (void *elem, void **output);
 
-int main(int argc, char *argv[]) {
+void student_printer(struct grades *grades, struct iterator *student_i);
+struct iterator* find_id (struct grades *grades, int id_num);
+//struct iterator* find_course (struct student *student, const char *course);
+
+//int main(int argc, char *argv[]) {
 
 	struct grades {
 	  struct list *list;
@@ -68,8 +72,8 @@ int main(int argc, char *argv[]) {
 	 * @param course is the name of the course we're looking for
 	 * @returns an iterator to the course in the list of the student
 	 */
-	struct iterator* find_course (struct grades *grades,const char *course){
-			struct iterator* i=list_begin(grades->list);
+	struct iterator* find_course (struct student *student,const char *course){
+			struct iterator* i=list_begin(student->course_list);
 			while (i!=NULL &&
 				!strcmp(((struct course*)(list_get(i)))->course_name, course)){
 				i = list_next(i);
@@ -81,13 +85,15 @@ int main(int argc, char *argv[]) {
 		}
 
 	struct grades* grades_init(){
-		struct grades *student_list;
+		struct grades *student_list=
+				(struct grades*)malloc(sizeof(struct grades*));
 		student_list->list = list_init(clone_student, destroy_student);
 		return student_list;
 	}
 
 	void grades_destroy(struct grades *grades){
 		list_destroy(grades->list);
+		free(grades);
 	}
 
 	int grades_add_student(struct grades *grades, const char *name, int id){
@@ -99,8 +105,8 @@ int main(int argc, char *argv[]) {
 		student->name=(char*)malloc(strlen(name)*sizeof(char));
 		strcpy(student->name, name);
 		student->id=id;
-		list_push_front(grades->list, student);
 		student->course_list = list_init(clone_course, destroy_course);
+		list_push_back(grades->list, student);
 		return 0;
 	}
 
@@ -110,13 +116,13 @@ int main(int argc, char *argv[]) {
 	                     int grade){
 		struct iterator *i=find_id(grades, id);
 		if (grades==NULL || i==NULL || grade<0 || grade>100 ||
-				find_course(grades, name)!=NULL){
+				find_course(list_get(i), name)!=NULL){
 			return FAIL;
 		}
 		struct course *course=(struct course*)malloc(sizeof(struct course*));
 		strcpy(course->course_name,name);
 		course->grade=grade;
-		list_push_front(((struct student*)list_get(i))->course_list, course);
+		list_push_back(((struct student*)list_get(i))->course_list, course);
 		return 0;
 	}
 
@@ -124,7 +130,10 @@ int main(int argc, char *argv[]) {
 		int sum=0;
 		struct iterator *i=find_id(grades, id);
 		struct iterator* j=
-				list_begin(((struct student*)(list_get(i)))->course_list);
+				list_begin((((struct student*)(list_get(i)))->course_list));
+		if ((list_size(((struct student*)(list_get(i)))->course_list))==0){
+			return 0;
+		}
 		while(j!=NULL){
 			sum+=((struct course*)list_get(j))->grade;
 		}
@@ -142,7 +151,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	int grades_print_all(struct grades *grades){
-		if(grades==NULL){ //like this?
+		if(grades->list==NULL){
 			return FAIL;
 		}
 		struct iterator* student_i = list_begin(grades->list);
@@ -154,6 +163,7 @@ int main(int argc, char *argv[]) {
 	}
 	void destroy_student (void *elem){
 		free(((struct student*)elem)->name);
+		list_destroy((((struct student*)elem)->course_list));
 		free(elem);
 	}
 	void destroy_course (void *elem){
@@ -161,22 +171,29 @@ int main(int argc, char *argv[]) {
 		free(elem);
 	}
 	int clone_student (void *elem, void **output){
+		struct student *student=
+				(struct student*)malloc(sizeof(struct student*));
+		*output=student;
 		((struct student*)*output)->prev=((struct student*)elem)->prev;
 		((struct student*)*output)->next=((struct student*)elem)->next;
 		((struct student*)*output)->name=((struct student*)elem)->name;
 		((struct student*)*output)->id=((struct student*)elem)->id;
-		((struct student*)*output)->course_list=((struct student*)elem)->course_list;
+		((struct student*)*output)->course_list=
+				((struct student*)elem)->course_list;
 		return 0;
 	}
 	int clone_course (void *elem, void **output){
+		struct course *course=(struct course*)malloc(sizeof(struct course*));
+		*output=course;
 		((struct course*)*output)->next=((struct course*)elem)->next;
 		((struct course*)*output)->prev=((struct course*)elem)->prev;
-		((struct course*)*output)->course_name=((struct course*)elem)->course_name;
+		((struct course*)*output)->course_name=
+				((struct course*)elem)->course_name;
 		((struct course*)*output)->grade=((struct course*)elem)->grade;
 		return 0;
 	}
 
 
-    return 0;
-}
+//    return 0;
+//}
 
